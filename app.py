@@ -61,11 +61,11 @@ def infer_pv():
 
 @app.route('/infer_ap', methods=['POST'])
 def infer_ap():
-    return infer_model('ap_livercrop_unet', 'ap_filename')
+    return infer_model('ha_livercrop_unet', 'ap_filename')
 
 @app.route('/infer_vp', methods=['POST'])
 def infer_vp():
-    return infer_model('vp_livercrop_unet', 'vp_filename')
+    return infer_model('pv_livercrop_unet', 'vp_filename')
 
 @app.route('/download/<filename>')
 def download_file(filename):
