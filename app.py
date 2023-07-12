@@ -14,6 +14,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 @app.route('/')
 def home():
+    session.clear()
     return render_template("home.html", pv_filename=session.get('pv_filename', None),
                            ap_filename=session.get('ap_filename', None),
                            vp_filename=session.get('vp_filename', None))
