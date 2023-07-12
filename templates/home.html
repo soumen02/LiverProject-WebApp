@@ -1,0 +1,27 @@
+<!doctype html>
+<title>Liver Project</title>
+<h1>Triple Phase Liver Vessel Segmentation</h1>
+<h2> Portal Venous Phase </h2>
+<form method="POST" action="/infer_pv" enctype="multipart/form-data">
+  <input type="file" name="file">
+  <input type="submit" value="Upload">
+</form>
+{% if pv_filename %}
+  <p>Results: <a href="{{ url_for('download_file', filename=pv_filename) }}">Download</a></p>
+{% endif %}
+<h2> Arterial Phase </h2>
+<form method="POST" action="/infer_ap" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" value="Upload">
+</form>
+{% if ap_filename %}
+  <p>Results: <a href="{{ url_for('download_file', filename=ap_filename) }}">Download</a></p>
+{% endif %}
+<h2> Venous Phase </h2>
+<form method="POST" action="/infer_vp" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" value="Upload">
+</form>
+{% if vp_filename %}
+  <p>Results: <a href="{{ url_for('download_file', filename=vp_filename) }}">Download</a></p>
+{% endif %}
