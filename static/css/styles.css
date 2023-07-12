@@ -1,0 +1,33 @@
+body {
+  background-color: #ffffff;
+  font-size: 14px;
+}
+
+.card {
+  background-color: #f5f5f5;
+  margin-bottom: 15px;
+}
+
+.card-title {
+  text-align: center;
+  font-size: 20px;
+}
+
+#heading {
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+
+.btn-primary {
+  /* align button to center of the card and have a space between file choosing and the button */
+    display: block;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+#error {
+    color: red;
+    margin-top: 10px;
+    display: none;
+}

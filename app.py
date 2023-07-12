@@ -45,7 +45,7 @@ def infer_model(model, session_key):
             files=files,
         )
     # Save the response content (a .nii.gz file) to a new file
-    response_filename = f'response_{model}.nii.gz'
+    response_filename = f'segmented_{filename}.nii.gz'
     response_filepath = os.path.join(app.config['UPLOAD_FOLDER'], response_filename)
     with open(response_filepath, 'wb') as f:
         f.write(response.content)
