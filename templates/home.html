@@ -32,7 +32,7 @@
               <button type="submit" class="btn btn-primary">Segment</button>
             </form>
             {% if pv_filename %}
-              <p>Results: <a href="{{ url_for('download_file', filename=pv_filename) }}">Download</a></p>
+              <p>Results: <a href="{{ url_for('download_file', filepath=pv_filename) }}">Download</a></p>
             {% endif %}
           </div>
         </div>
@@ -50,7 +50,7 @@
                 <button type="submit" class="btn btn-primary">Segment</button>
             </form>
             {% if ap_filename %}
-              <p>Results: <a href="{{ url_for('download_file', filename=ap_filename) }}">Download</a></p>
+              <p>Results: <a href="{{ url_for('download_file', filepath=ap_filename) }}">Download</a></p>
             {% endif %}
           </div>
         </div>
@@ -68,7 +68,7 @@
                 <button type="submit" class="btn btn-primary">Segment</button>
             </form>
             {% if vp_filename %}
-              <p>Results: <a href="{{ url_for('download_file', filename=vp_filename) }}">Download</a></p>
+              <p>Results: <a href="{{ url_for('download_file', filepath=vp_filename) }}">Download</a></p>
             {% endif %}
           </div>
         </div>
