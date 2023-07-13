@@ -2,6 +2,7 @@ from flask import Flask, redirect, request, jsonify, send_file, render_template,
 import requests
 import os
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key_here'  # you can put any string here, but make sure it's hard to guess
@@ -28,10 +29,14 @@ def infer_model(model, session_key):
     # submit an empty file without a filename.
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
+    
+    upload_folder  = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    upload_dir = os.path.join(app.config['UPLOAD_FOLDER'], upload_folder)
+    os.makedirs(upload_dir, exist_ok=True)
 
     # Save the uploaded file to the upload folder
     filename = secure_filename(file.filename)
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    filepath = os.path.join(upload_dir, filename)
     file.save(filepath)
 
     # Make a request to the MonaiLabel server with the uploaded file
@@ -47,7 +52,7 @@ def infer_model(model, session_key):
         )
     # Save the response content (a .nii.gz file) to a new file
     response_filename = f'segmented_{filename}.nii.gz'
-    response_filepath = os.path.join(app.config['UPLOAD_FOLDER'], response_filename)
+    response_filepath = os.path.join(upload_dir, response_filename)
     with open(response_filepath, 'wb') as f:
         f.write(response.content)
 
