@@ -53,7 +53,9 @@ def crop_with_fslmaths(input_volume_path, bounding_box_path, output_volume_path)
 def process_volume(volume_path, output_dir):
     # Apply TotalSegmentator
     output_folder_name = os.path.join(output_dir, 'TotalSegmentator_output')
-    subprocess.run(['TotalSegmentator', '-i', volume_path, '-o', output_folder_name], stdout=subprocess.DEVNULL)
+    subprocess.run(['TotalSegmentator', '-i', volume_path, '-o', output_folder_name, '--roi_subset', 'liver'])
+
+    print(f'TotalSegmentator Applied {volume_path}...')
 
     # Parse into the folder, extract the liver label
     liver_mask_path = os.path.join(output_folder_name, 'liver.nii.gz')
@@ -62,12 +64,13 @@ def process_volume(volume_path, output_dir):
     box_mask_path = os.path.join(output_dir, 'box_mask.nii.gz')
     create_bounding_box(liver_mask_path, box_mask_path)
 
+    print(f'Bounding Box Created {volume_path}...')
+
     # Crop the volume using fslmaths
     cropped_volume_path = os.path.join(output_dir, 'cropped_' + os.path.basename(volume_path))
     crop_with_fslmaths(volume_path, box_mask_path, cropped_volume_path)
 
-    # Remove the temporary output folder of TotalSegmentator
-    shutil.rmtree(output_folder_name)
+    print(f'Volume Cropped {volume_path}...')
 
     return cropped_volume_path
 
@@ -90,7 +93,12 @@ def infer_model(model, session_key):
     filepath = os.path.join(upload_dir, filename)
     file.save(filepath)
 
+    # print status
+    print(f'Processing {filename}...')
     processed_filepath = process_volume(filepath, upload_dir)
+
+    # print status
+    print(f'Uploading {filename} to MonaiLabel...')
 
     # Make a request to the MonaiLabel server with the uploaded file
     with open(processed_filepath, 'rb') as f:
@@ -133,4 +141,5 @@ def download_file(filepath):
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], filepath), as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(debug=True, use_reloader=False)
+
