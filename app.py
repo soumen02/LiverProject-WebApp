@@ -74,6 +74,15 @@ def process_volume(volume_path, output_dir):
 
     return cropped_volume_path
 
+def dcm_to_nii(dcm_path, dcm_filename):
+    nii_filename = os.path.splitext(dcm_filename)[0]
+    subprocess.run(['dcm2niix', '-z', 'y', '-f', nii_filename, dcm_path], check=True)
+
+    nii_filename = os.path.splitext(nii_filename)[0] + '.nii.gz'
+    nii_path = os.path.join(os.path.dirname(dcm_path), nii_filename)
+    
+    return nii_path, nii_filename
+
 def infer_model(model, session_key):
     # Check if a file was posted
     if 'file' not in request.files:
@@ -92,6 +101,13 @@ def infer_model(model, session_key):
     filename = secure_filename(file.filename)
     filepath = os.path.join(upload_dir, filename)
     file.save(filepath)
+
+    
+    # if volume is .dcm file, convert to .nii.gz
+    if filename.endswith('.dcm'):
+        print(f'Converting {filename} to .nii.gz...')
+        filepath, filename = dcm_to_nii(filepath, filename)
+
 
     # print status
     print(f'Processing {filename}...')
