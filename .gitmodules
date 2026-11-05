@@ -1,0 +1,3 @@
+[submodule "LiverProject-noGUI"]
+	path = LiverProject-noGUI
+	url = https://github.com/soumen02/LiverProject-noGUI.git

@@ -1,0 +1,44 @@
+x-model-server: &model-server
+  build:
+    context: .
+    dockerfile: docker/models.Dockerfile
+  image: liverproject-models
+  healthcheck:
+    test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8000/info/', timeout=3)"]
+    interval: 10s
+    timeout: 5s
+    retries: 30
+    start_period: 30s
+
+services:
+  pv:
+    <<: *model-server
+    command: python -m monailabel.main start_server --app radiologyPV --studies StudiesPV --conf models pv_segmentation --conf use_pretrained_model false --port 8000
+  ha:
+    <<: *model-server
+    command: python -m monailabel.main start_server --app radiologyHA --studies StudiesHA --conf models ha_segmentation --conf use_pretrained_model false --port 8000
+  hv:
+    <<: *model-server
+    command: python -m monailabel.main start_server --app radiologyHV --studies StudiesHV --conf models hv_segmentation --conf use_pretrained_model false --port 8000
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    image: liverproject-web
+    environment:
+      MONAI_PV_URL: http://pv:8000
+      MONAI_HA_URL: http://ha:8000
+      MONAI_HV_URL: http://hv:8000
+    ports:
+      - "127.0.0.1:5055:5000"
+    volumes:
+      - totalsegmentator-weights:/weights
+      - uploads:/app/uploads
+    depends_on:
+      pv: {condition: service_healthy}
+      ha: {condition: service_healthy}
+      hv: {condition: service_healthy}
+
+volumes:
+  totalsegmentator-weights:
+  uploads:

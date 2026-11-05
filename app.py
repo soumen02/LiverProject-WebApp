@@ -178,5 +178,5 @@ def download_file(filepath):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filepath, as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(port=int(os.environ.get('PORT', 5000)), use_reloader=False)
+    app.run(host=os.environ.get('HOST', '127.0.0.1'), port=int(os.environ.get('PORT', 5000)), use_reloader=False)
 
